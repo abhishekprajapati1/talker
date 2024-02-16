@@ -1,36 +1,37 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
 import { ContactService } from './contact.service';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { UpdateContactDto } from './dto/update-contact.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { RequestWithAll } from 'libs/types';
 
-@Controller('contact')
+@Controller('contacts')
 @ApiTags("Contacts")
 export class ContactController {
   constructor(private readonly contactService: ContactService) { }
 
   @Post()
-  create(@Body() createContactDto: CreateContactDto) {
-    return this.contactService.create(createContactDto);
+  async create(@Body() createContactDto: CreateContactDto, @Req() req: RequestWithAll) {
+    const id = req.user.id;
+    await this.contactService.create(createContactDto, id);
+    return { success: true, message: "Contact created successfully." }
   }
 
   @Get()
-  findAll() {
-    return this.contactService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.contactService.findOne(+id);
+  async findAll(@Req() req: RequestWithAll) {
+    const data = await this.contactService.findAll(req.user.id);
+    return { success: true, data }
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateContactDto: UpdateContactDto) {
-    return this.contactService.update(+id, updateContactDto);
+  async update(@Param('id') id: string, @Body() updateContactDto: UpdateContactDto) {
+    await this.contactService.update(id, updateContactDto);
+    return { success: true, message: "Contact updated successfully." }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.contactService.remove(+id);
+  async remove(@Param('id') id: string) {
+    await this.contactService.remove(id);
+    return { success: true, message: "Contact deleted successfully." };
   }
 }

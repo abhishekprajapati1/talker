@@ -1,7 +1,7 @@
 import { TextField, TextFieldProps } from "@mui/material";
 import { FC } from "react";
 
-const InputBox: FC<TextFieldProps> = ({...rest}) => {
+const InputBox: FC<TextFieldProps> = ({ className, ...rest }) => {
     return (
         <TextField
             InputProps={{
@@ -9,6 +9,7 @@ const InputBox: FC<TextFieldProps> = ({...rest}) => {
                     borderRadius: '10px'
                 }
             }}
+            className={`w-full ${className || ""}`}
             {...rest}
         />
     )

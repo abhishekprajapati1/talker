@@ -6,46 +6,79 @@ import React from 'react'
 import GoogleAuthButton from '../GoogleAuthButton'
 import FacebookAuthButton from '../FacebookAuthButton'
 import Link from 'next/link'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
+import { ISignupForm } from '@/libs/forms';
+import useSignup from '@/libs/mutations/auth/useSignup';
 
 
 
 const RegistrationForm = () => {
-    const router = useRouter();
-    const { handleSubmit } = useForm();
+    const { mutate: signup, isPending } = useSignup();
+    const { handleSubmit, control } = useForm<ISignupForm>({
+        defaultValues: {
+            email: "",
+            password: "",
+            name: ""
+        }
+    });
 
-    const onSubmit = (data: any) => {
-        router.push("/login")
+    const onSubmit = (data: ISignupForm) => {
+        console.log("see this", data);
+        signup(data);
     }
 
     return (
         <Box component="form" onSubmit={handleSubmit(onSubmit)} height="100%" marginTop={2}>
             <Stack height="100%" direction="column" gap={3}>
-                <FormGroup>
-                    <InputBox
-                        required
-                        label="Full Name"
-                        size="small"
-                        type="text"
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <InputBox
-                        required
-                        label="Email address"
-                        size="small"
-                        type="email"
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <InputBox
-                        required
-                        label="Password"
-                        size="small"
-                        type="password"
-                    />
-                </FormGroup>
+                <Controller
+                    name='name'
+                    control={control}
+                    render={({ field }) => {
+                        return (
+                            <InputBox
+                                required
+                                label="Full Name"
+                                size="small"
+                                type="text"
+                                {...field}
+                            />
+                        )
+                    }}
+                />
+
+
+                <Controller
+                    name='email'
+                    control={control}
+                    render={({ field }) => {
+                        return (
+                            <InputBox
+                                required
+                                label="Email address"
+                                size="small"
+                                type="email"
+                                {...field}
+                            />
+                        )
+                    }}
+                />
+
+                <Controller
+                    name='password'
+                    control={control}
+                    render={({ field }) => {
+                        return (
+                            <InputBox
+                                required
+                                label="Password"
+                                size="small"
+                                type="password"
+                                {...field}
+                            />
+                        )
+                    }}
+                />
 
                 <Button type="submit" variant="contained">
                     Register
