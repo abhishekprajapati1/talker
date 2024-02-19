@@ -1,13 +1,30 @@
+'use client';
 import { Box, Typography } from '@mui/material'
-import React from 'react'
+import React, { useEffect } from 'react'
 import ConversationTile from './ConversationTile';
+import Socket from '@/libs/Socket';
 
 const ConversationList = () => {
+
+    const socket = Socket.socket;
 
     let conversations = [
         { name: "Abhishek Prajapati", email: "abhishek@gmail.com" },
         { name: "John Doe", email: "doe.john@gmail.com" },
     ];
+
+
+
+    useEffect(() => {
+        const messageReceivedHandler = (newMessageReceived: string) => {
+            console.log("see this message recieved", newMessageReceived);
+        };
+        socket.on("message", messageReceivedHandler);
+        return () => {
+            socket.off("message", messageReceivedHandler);
+        };
+
+    });
 
 
     if (conversations.length <= 0) {
@@ -29,4 +46,4 @@ const ConversationList = () => {
     )
 }
 
-export default ConversationList
+export default ConversationList;

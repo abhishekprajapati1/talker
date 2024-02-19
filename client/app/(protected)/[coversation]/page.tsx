@@ -3,7 +3,9 @@ import React from 'react'
 
 const ConversationPage = () => {
     return (
-        <Box>ConversationPage</Box>
+        <Box>
+            
+        </Box>
     )
 }
 

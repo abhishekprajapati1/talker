@@ -33,7 +33,6 @@ export class AuthController {
   @Post("login")
   async login(@Body() loginDto: LoginDto, @Res() response: Response) {
     const user = await this.authService.userLogin(loginDto);
-
     const access_token = this.tokenService.generateToken({ id: user.id })
     const refresh_token = this.tokenService.generateToken({ type: TOKENS.refresh_auth_token, data: { id: user.id } }, { expiresIn: TOKEN_EXPIRATIONS[TOKENS.refresh_auth_token] });
 

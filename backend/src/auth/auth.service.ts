@@ -37,7 +37,6 @@ export class AuthService {
 
     // check password
     if (!this.utilities.compareString(loginDto.password, user.password)) throw new BadRequestException({ success: false, message: "Invalid credentials." });
-
     
     return user;
   }

@@ -36,13 +36,11 @@ async function bootstrap() {
     }
   }))
 
-
-
-
   const swaggerConfig = new DocumentBuilder().setTitle("Talker").setDescription("API(s) for Talker project").setVersion('1.0').build();
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('docs', app, swaggerDocument);
 
-  await app.listen(4000);
+
+  await app.listen(process.env.PORT);
 }
 bootstrap();
