@@ -14,4 +14,4 @@ import { ChatModule } from './chat/chat.module';
   providers: [AppService],
   imports: [UserModule, AuthModule, ContactModule, PrismaModule, UtilityModule, TokenModule, ChatModule],
 })
-export class AppModule {}
+export class AppModule { }

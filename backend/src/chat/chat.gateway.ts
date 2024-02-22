@@ -1,16 +1,20 @@
-import { MessageBody, OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
+import { MessageBody, OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
 import { ChatService } from "./chat.service";
-
+import { BadGatewayException, Logger, UseGuards } from "@nestjs/common";
+import { ChatAuthGuard } from "./chat.guard";
+import { ChatAuthMiddleware } from "./chat.middleware";
 
 @WebSocketGateway({
     cors: {
         credentials: true,
         allowedHeaders: ["*", "content-type", "authorization"],
         origin: ["http://localhost:3000"]
-    }
+    },
+
 })
-export class ChatGateway implements OnGatewayConnection {
+@UseGuards(ChatAuthGuard)
+export class ChatGateway {
 
     @WebSocketServer()
     server: Server;
@@ -19,9 +23,8 @@ export class ChatGateway implements OnGatewayConnection {
         private readonly chatService: ChatService
     ) { }
 
-
-    async handleConnection(socket: Socket, ...args: any[]) {
-        await this.chatService.getUserFromSocket(socket);
+    async afterInit(socket: Socket) {
+        socket.use(ChatAuthMiddleware() as any)
     }
 
     @SubscribeMessage('message')

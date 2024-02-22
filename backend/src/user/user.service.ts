@@ -19,8 +19,9 @@ export class UserService {
     return `This action returns all user`;
   }
 
+  // used for checking necessary details available in public domain
   async findOne(id: string) {
-    return await this.prisma.user.findUnique({ where: { id } });
+    return await this.prisma.user.findUnique({ where: { id }, select: { id: true, email: true, name: true } });
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
