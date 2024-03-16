@@ -12,8 +12,7 @@ const ConversationList = () => {
         { name: "Abhishek Prajapati", email: "abhishek@gmail.com" },
         { name: "John Doe", email: "doe.john@gmail.com" },
     ];
-
-
+    
 
     useEffect(() => {
         const messageReceivedHandler = (newMessageReceived: string) => {

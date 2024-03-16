@@ -20,3 +20,11 @@ export interface RefreshToken {
 }
 
 export interface RequestWithAll extends Request, IUserPayload, RefreshToken, TokenPayload { }
+
+
+export interface IMessage {
+    reciever_id: string;
+    body: {
+        text?: string;
+    }
+}

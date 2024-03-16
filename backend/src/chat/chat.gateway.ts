@@ -1,9 +1,10 @@
 import { MessageBody, OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
 import { ChatService } from "./chat.service";
-import { BadGatewayException, Logger, UseGuards } from "@nestjs/common";
+import { Logger, UseGuards } from "@nestjs/common";
 import { ChatAuthGuard } from "./chat.guard";
 import { ChatAuthMiddleware } from "./chat.middleware";
+import { IMessage } from "libs/types";
 
 @WebSocketGateway({
     cors: {
@@ -28,7 +29,17 @@ export class ChatGateway {
     }
 
     @SubscribeMessage('message')
-    listenForMessages(@MessageBody() message: string) {
+    listenForMessages(@MessageBody() message: IMessage) {
         console.log("see this message", message)
+    }
+
+
+    @SubscribeMessage('search-new-user')
+    searchUsers(@MessageBody() input: string) {
+        this.server.emit('user-search-result', [input])
+    }
+
+    handleConnection(socket: any, ...args: any[]): void {
+        Logger.log("client connected");
     }
 }
