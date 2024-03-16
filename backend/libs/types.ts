@@ -1,4 +1,5 @@
 import { Request } from "express";
+import { Socket } from "socket.io";
 
 export type UserPayload = {
     id: string;
@@ -26,5 +27,13 @@ export interface IMessage {
     reciever_id: string;
     body: {
         text?: string;
+    }
+}
+
+export interface HydratedSocket extends Socket {
+    user: {
+        id: string;
+        iat: number;
+        exp: number;
     }
 }

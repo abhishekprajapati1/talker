@@ -33,4 +33,13 @@ export class ContactService {
   async remove(id: string) {
     await this.prisma.contact.delete({ where: { id } });
   }
+
+  async findAllByNameOrEmail(params: { user_id: string, input: string }) {
+    return await this.prisma.contact.findMany({
+      where: {
+        user_id: params.user_id,
+        name: { contains: params.input }
+      }, select: { email: true, name: true, id: true }
+    });
+  }
 }

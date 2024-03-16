@@ -7,3 +7,11 @@ export interface IWrapper {
 export interface SvgIconProps extends SVGProps<SVGSVGElement> {
 
 }
+
+export interface User {
+    id: string;
+    name: string;
+    email: string;
+}
+
+export type NewConversationResultType = { data: User, isTalkerUser: boolean }

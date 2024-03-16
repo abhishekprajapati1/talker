@@ -31,4 +31,13 @@ export class UserService {
   remove(id: number) {
     return `This action removes a #${id} user`;
   }
+
+  async findAllByNameOrEmail(input: string) {
+    return await this.prisma.user.findMany({
+      where: {
+        name: { contains: input }
+      },
+      select: { email: true, name: true, id: true }
+    })
+  }
 }

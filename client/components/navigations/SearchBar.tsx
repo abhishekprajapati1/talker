@@ -4,6 +4,9 @@ import Link from 'next/link'
 import React, { FC, useEffect, useState } from 'react'
 import AngleIcon from '../icons/AngleIcon'
 import Socket from '@/libs/Socket';
+import { useAppDispatch } from '@/store';
+import { setNewConversationResults } from '@/store/slices/conversation.slice';
+import { User } from '@/libs/types';
 
 interface TopBarProps {
     title?: string;
@@ -12,8 +15,8 @@ interface TopBarProps {
 
 const SearchBar: FC<TopBarProps> = ({ title, onBack }) => {
     const socket = Socket.socket;
+    const dispatch = useAppDispatch();
     const [searchText, setSearchText] = useState("");
-    const [searchResults, setSearchResults] = useState<any[]>([]);
 
 
     useEffect(() => {
@@ -24,8 +27,8 @@ const SearchBar: FC<TopBarProps> = ({ title, onBack }) => {
 
 
     useEffect(() => {
-        const messageReceivedHandler = (newMessageReceived: any[]) => {
-            setSearchResults(newMessageReceived);
+        const messageReceivedHandler = (newMessageReceived: User[]) => {
+            dispatch(setNewConversationResults(newMessageReceived))
         };
         socket.on("user-search-result", messageReceivedHandler);
         return () => {
@@ -33,8 +36,6 @@ const SearchBar: FC<TopBarProps> = ({ title, onBack }) => {
         };
 
     });
-
-    console.log('see this results', searchResults);
     return (
         <AppBar position='sticky' color="transparent" sx={{ boxShadow: 0 }} className='top-0 border border-bottom'>
             <Toolbar sx={{ height: 70 }} >
@@ -42,7 +43,7 @@ const SearchBar: FC<TopBarProps> = ({ title, onBack }) => {
                     <IconButton size="large" component={Link} href="/">
                         <AngleIcon className="w-[22px] h-[22px]" />
                     </IconButton>
-                    <Box component="input" placeholder='Enter name or email...' className='border-none outline-none' value={searchText} onChange={event => setSearchText(event.target.value)} type="text" />
+                    <Box component="input" placeholder='Enter name or email...' className='border-none text-gray-600 outline-none' value={searchText} onChange={event => setSearchText(event.target.value)} type="text" />
                 </Stack>
             </Toolbar>
         </AppBar>
