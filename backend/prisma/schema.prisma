@@ -19,18 +19,24 @@ model Contact {
 }
 
 model User {
-  id             String        @id @default(uuid())
-  email          String        @unique
+  id             String         @id @default(uuid())
+  email          String         @unique
   name           String
   password       String
+  deleted_at     DateTime?
   contacts       Contact[]
   messages       Message[]
   participations Participant[]
+  conversations  Conversation[]
 }
 
 model Conversation {
   id           String        @id @default(uuid())
   type         String?       @default("individual")
+  created_at   DateTime?     @default(now())
+  updated_at   DateTime?     @updatedAt
+  creator      User?         @relation(fields: [creator_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  creator_id   String?
   messages     Message[]
   participants Participant[]
 }

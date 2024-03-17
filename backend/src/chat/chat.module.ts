@@ -6,9 +6,10 @@ import { ChatGateway } from './chat.gateway';
 import { TokenModule } from '../token/token.module';
 import { ChatAuthGuard } from './chat.guard';
 import { ContactModule } from '../contact/contact.module';
+import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
-  imports: [UserModule, TokenModule, ContactModule],
+  imports: [UserModule, TokenModule, ContactModule, PrismaModule],
   controllers: [ChatController],
   providers: [ChatService, ChatGateway, ChatAuthGuard]
 })

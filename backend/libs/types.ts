@@ -22,14 +22,6 @@ export interface RefreshToken {
 
 export interface RequestWithAll extends Request, IUserPayload, RefreshToken, TokenPayload { }
 
-
-export interface IMessage {
-    reciever_id: string;
-    body: {
-        text?: string;
-    }
-}
-
 export interface HydratedSocket extends Socket {
     user: {
         id: string;

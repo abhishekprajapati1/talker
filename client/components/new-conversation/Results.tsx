@@ -1,13 +1,12 @@
 'use client';
 import { useAppSelector } from '@/store';
-import { Box, Typography } from '@mui/material';
-import React from 'react'
+import { Box, Stack, Typography } from '@mui/material';
+import React, { useEffect } from 'react'
 import ResultCard from './ResultCard';
 
 const Results = () => {
-    const results = useAppSelector(store => store.conversationStore.newConversationResults);
 
-    console.log("see this", results);
+    const results = useAppSelector(store => store.conversationStore.newConversationResults);
 
     if (!results || results.length <= 0) {
         return (
@@ -18,7 +17,7 @@ const Results = () => {
     }
 
     return (
-        <Box className="h-full text-gray-600">
+        <Stack className="h-full text-gray-600" gap={3}>
             {
                 results.map((result, index) => {
                     return (
@@ -26,7 +25,7 @@ const Results = () => {
                     )
                 })
             }
-        </Box>
+        </Stack>
     )
 }
 

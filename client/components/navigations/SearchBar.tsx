@@ -6,7 +6,7 @@ import AngleIcon from '../icons/AngleIcon'
 import Socket from '@/libs/Socket';
 import { useAppDispatch } from '@/store';
 import { setNewConversationResults } from '@/store/slices/conversation.slice';
-import { User } from '@/libs/types';
+import { NewConversationResultType, User } from '@/libs/types';
 
 interface TopBarProps {
     title?: string;
@@ -27,14 +27,13 @@ const SearchBar: FC<TopBarProps> = ({ title, onBack }) => {
 
 
     useEffect(() => {
-        const messageReceivedHandler = (newMessageReceived: User[]) => {
+        const messageReceivedHandler = (newMessageReceived: NewConversationResultType[]) => {
             dispatch(setNewConversationResults(newMessageReceived))
         };
         socket.on("user-search-result", messageReceivedHandler);
         return () => {
             socket.off("user-search-result", messageReceivedHandler);
         };
-
     });
     return (
         <AppBar position='sticky' color="transparent" sx={{ boxShadow: 0 }} className='top-0 border border-bottom'>

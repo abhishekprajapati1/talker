@@ -1,11 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
 import conversationStore from "./slices/conversation.slice";
-
+import messagesStore from "./slices/messages.slice";
 
 const store = configureStore({
     reducer: {
-        conversationStore
+        conversationStore,
+        messagesStore
     },
 });
 

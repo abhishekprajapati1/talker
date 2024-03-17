@@ -37,8 +37,15 @@ export class AuthService {
 
     // check password
     if (!this.utilities.compareString(loginDto.password, user.password)) throw new BadRequestException({ success: false, message: "Invalid credentials." });
-    
+
     return user;
+  }
+
+  async getProfile(user_id: string) {
+    return await this.prisma.user.findUnique({
+      where: { id: user_id },
+      select: { id: true, name: true, email: true }
+    })
   }
 
   findAll() {

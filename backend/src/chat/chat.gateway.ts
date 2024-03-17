@@ -4,9 +4,10 @@ import { ChatService } from "./chat.service";
 import { Logger, UseGuards } from "@nestjs/common";
 import { ChatAuthGuard } from "./chat.guard";
 import { ChatAuthMiddleware } from "./chat.middleware";
-import { HydratedSocket, IMessage } from "libs/types";
+import { HydratedSocket } from "libs/types";
 import { ContactService } from "../contact/contact.service";
 import { UserService } from "../user/user.service";
+import { SendMessageDto } from "./dto/send-message.dto";
 
 @WebSocketGateway({
     cors: {
@@ -33,11 +34,9 @@ export class ChatGateway {
     }
 
     @SubscribeMessage('message')
-    listenForMessages(@MessageBody() message: IMessage, @ConnectedSocket() socket: HydratedSocket) {
-        // check if conversation exists for both sender and reciever
-        
-
-        console.log("see this message", message)
+    async listenForMessages(@MessageBody() message: SendMessageDto, @ConnectedSocket() socket: HydratedSocket) {
+        const created = await this.chatService.createMessage({ sender_id: socket.user.id, data: message });
+        this.server.to(message.conversation_id).emit('message', created);
     }
 
 
@@ -54,10 +53,13 @@ export class ChatGateway {
                 preparedUsers.push({ isTalkerUser: Boolean(foundUser), data: foundUser || contact }); // this code will send contact information of the user who is not registered on talker
             }
         }
-        this.server.emit('user-search-result', preparedUsers)
+        socket.emit('user-search-result', preparedUsers)
     }
 
-    handleConnection(socket: HydratedSocket, ...args: any[]): void {
+    async handleConnection(socket: HydratedSocket, ...args: any[]): Promise<void> {
         Logger.log("client connected");
+        // here we will let user join the rooms first...
+        const rooms = await this.chatService.getAllConversationIds(socket.user.id);
+        socket.join(rooms)
     }
 }

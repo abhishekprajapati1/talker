@@ -77,9 +77,10 @@ export class AuthController {
     })
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id);
+  @Get('profile')
+  async getProfileDetails(@Req() req: RequestWithAll) {
+    const data = await this.authService.getProfile(req.user.id);
+    return { success: true, data }
   }
 
   @Patch(':id')

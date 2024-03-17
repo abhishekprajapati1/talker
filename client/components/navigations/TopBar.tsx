@@ -8,21 +8,45 @@ import { IWrapper } from '@/libs/types'
 interface TopBarProps extends IWrapper {
     title?: string;
     backURL?: string;
+    isLoading?: boolean;
 }
 
-const Topbar: FC<TopBarProps> = ({ children, title, backURL = "/" }) => {
+const Topbar: FC<TopBarProps> = ({ children, title, backURL = "/", isLoading }) => {
+
+
+    if (isLoading) {
+        return (
+            <AppBar position='sticky' sx={{ boxShadow: 'none', top: 0 }}>
+                <Toolbar sx={{ height: 70 }} className='flex items-center' >
+                    <Stack direction="row" {...(title && { flexGrow: 1 })} gap={2} alignItems="center">
+                        <Box className="animate-pulse bg-white/50 w-[22px] h-[22px] rounded-md" />
+                        {title && <Box className="animate-pulse bg-white/50 w-[150px] h-[22px] rounded-md" />}
+                    </Stack>
+                    {
+                        children && (
+                            <Stack direction="row" {...(!title && { flexGrow: 1 })} alignItems="center" gap={2}>
+                                {children}
+                            </Stack>
+                        )
+                    }
+                </Toolbar>
+            </AppBar>
+        )
+    }
+
+
     return (
         <AppBar position='sticky' sx={{ boxShadow: 'none', top: 0 }}>
             <Toolbar sx={{ height: 70 }} >
-                <Stack direction="row" flexGrow={1} alignItems="center">
+                <Stack direction="row" {...(title && { flexGrow: 1 })} alignItems="center">
                     <IconButton size="large" component={Link} href={backURL}>
                         <AngleIcon className="text-white w-[22px] h-[22px]" />
                     </IconButton>
-                    <Typography variant='h6'>{title}</Typography>
+                    {title && <Typography variant='h6'>{title}</Typography>}
                 </Stack>
                 {
                     children && (
-                        <Stack direction="row" alignItems="center" gap={2}>
+                        <Stack direction="row" {...(!title && { flexGrow: 1 })} alignItems="center" gap={2}>
                             {children}
                         </Stack>
                     )

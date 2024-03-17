@@ -1,5 +1,4 @@
-import { AppBar, Box, IconButton, Stack, Toolbar, Typography } from '@mui/material'
-import Image from 'next/image'
+import { AppBar, IconButton, Stack, Toolbar, Typography } from '@mui/material'
 import Link from 'next/link'
 import React from 'react'
 import Logo from '../icons/Logo'
