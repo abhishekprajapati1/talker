@@ -1,15 +1,14 @@
 'use client';
-import Button from '@/widgets/Button'
 import InputBox from '@/widgets/InputBox'
-import { Box, FormGroup, Stack, Typography } from '@mui/material'
+import { Box, Stack, Typography } from '@mui/material'
 import React from 'react'
 import GoogleAuthButton from '../GoogleAuthButton'
 import FacebookAuthButton from '../FacebookAuthButton'
 import Link from 'next/link'
 import { Controller, useForm } from 'react-hook-form'
-import { useRouter } from 'next/navigation'
 import { ISignupForm } from '@/libs/forms';
 import useSignup from '@/libs/mutations/auth/useSignup';
+import { Button } from '../ui/button';
 
 
 
@@ -80,7 +79,7 @@ const RegistrationForm = () => {
                     }}
                 />
 
-                <Button type="submit" variant="contained">
+                <Button type="submit">
                     Register
                 </Button>
                 <Typography textAlign="center">or</Typography>
@@ -89,7 +88,7 @@ const RegistrationForm = () => {
                 <FacebookAuthButton />
 
                 <Box flexGrow={1}>
-                    <Typography variant='subtitle2' textAlign="center">Already have an account ? <Box color="primary.main" component={Link} href="/login">login</Box>.</Typography>
+                    <p className='text-center text-sm'>Already have an account ? <Box color="primary.main" component={Link} href="/login">login</Box>.</p>
                 </Box>
             </Stack>
         </Box>

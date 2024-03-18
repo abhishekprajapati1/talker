@@ -6,7 +6,7 @@ import AngleIcon from '../icons/AngleIcon'
 import Socket from '@/libs/Socket';
 import { useAppDispatch } from '@/store';
 import { setNewConversationResults } from '@/store/slices/conversation.slice';
-import { NewConversationResultType, User } from '@/libs/types';
+import { NewConversationResultType } from '@/libs/types';
 
 interface TopBarProps {
     title?: string;

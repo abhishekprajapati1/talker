@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, BadRequestException, Req, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, BadRequestException, Req, Query, Logger } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
@@ -81,6 +81,14 @@ export class AuthController {
   async getProfileDetails(@Req() req: RequestWithAll) {
     const data = await this.authService.getProfile(req.user.id);
     return { success: true, data }
+  }
+
+  @Post("logout")
+  logout(@Req() req: RequestWithAll, @Res() res: Response) {
+    for (let cookieName in req.cookies) {
+      this.tokenService.removeCookie(res, cookieName);
+    }
+    res.status(HttpStatus.OK).json({ success: true, message: "Logged out successfully" });
   }
 
   @Patch(':id')

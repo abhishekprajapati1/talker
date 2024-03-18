@@ -12,6 +12,8 @@ const TextMessage: FC<TextMessageProps> = ({ sender_id, body, status, timestamp 
     const { data, isLoading } = useFetch({ endpoint: endpoints.PROFILE });
     const sameUser = sender_id === data?.id;
 
+    console.log("see this", sameUser);
+
     if (isLoading) {
         return (
             <div>

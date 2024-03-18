@@ -1,5 +1,5 @@
 const endpoints = {
-    LOGOUT: "",
+    LOGOUT: "auth/logout",
     REFRESH_TOKEN: "auth/refresh-token",
     PROFILE: "auth/profile",
     SIGNUP: "auth/signup",

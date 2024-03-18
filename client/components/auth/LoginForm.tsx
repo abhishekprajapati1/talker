@@ -1,7 +1,6 @@
 'use client';
-import Button from '@/widgets/Button'
 import InputBox from '@/widgets/InputBox'
-import { Box, FormGroup, Stack, Typography } from '@mui/material'
+import { Box, Stack, Typography } from '@mui/material'
 import React from 'react'
 import GoogleAuthButton from '../GoogleAuthButton'
 import FacebookAuthButton from '../FacebookAuthButton'
@@ -10,6 +9,7 @@ import { useRouter } from 'next/navigation'
 import { Controller, useForm } from 'react-hook-form';
 import useLogin from '@/libs/mutations/auth/useLogin';
 import { ILoginForm } from '@/libs/forms';
+import { Button } from '../ui/button';
 
 const LoginForm = () => {
     const router = useRouter();
@@ -62,7 +62,7 @@ const LoginForm = () => {
                     }}
                 />
 
-                <Button type="submit" variant="contained">
+                <Button type="submit">
                     Login
                 </Button>
                 <Typography textAlign="center">or</Typography>

@@ -1,11 +1,11 @@
-import Button from '@/widgets/Button'
-import { ButtonProps } from '@mui/material'
 import React, { FC } from 'react'
 import GoogleIcon from './icons/GoogleIcon'
+import { Button, ButtonProps } from './ui/button'
 
 const GoogleAuthButton: FC<ButtonProps> = ({ ...rest }) => {
     return (
-        <Button type='button' startIcon={<GoogleIcon />} variant='contained' color='inherit' {...rest}>
+        <Button type='button' variant='secondary' {...rest}>
+            <GoogleIcon className="me-4 w-[20px] h-[20px]" />
             Continue with google
         </Button>
     )

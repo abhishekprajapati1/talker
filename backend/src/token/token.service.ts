@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
 import { MAX_AGES, TOKENS, TOKEN_EXPIRATIONS } from 'libs/constants';
 import { Response } from 'express';
@@ -32,7 +32,11 @@ export class TokenService {
     }
 
     removeCookie(response: Response, name: string): void {
-        response.clearCookie(name)
+        response.clearCookie(name, {
+            httpOnly: true,
+            sameSite: "none",
+            secure: true,
+        })
     }
 
     verifyRefreshToken(refresh_token: string, id: string) {
