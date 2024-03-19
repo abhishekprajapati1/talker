@@ -24,10 +24,19 @@ model User {
   name           String
   password       String
   deleted_at     DateTime?
+  status         UserStatus?
   contacts       Contact[]
   messages       Message[]
   participations Participant[]
   conversations  Conversation[]
+}
+
+model UserStatus {
+  id         String    @id @default(uuid())
+  type       String    @default("offline")
+  updated_at DateTime? @updatedAt
+  user       User      @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user_id    String    @unique
 }
 
 model Conversation {
