@@ -3,6 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
 
+interface IUpdateStatus { id: string, status: "online" | "offline" }
 @Injectable()
 export class UserService {
 
@@ -22,6 +23,24 @@ export class UserService {
   // used for checking necessary details available in public domain
   async findOne(id: string) {
     return await this.prisma.user.findUnique({ where: { id }, select: { id: true, email: true, name: true } });
+  }
+
+  async updateStatus({ id, status }: IUpdateStatus) {
+    return await this.prisma.userStatus.upsert({
+      where: { user_id: id },
+      create: {
+        type: status,
+        user: { connect: { id } }
+      },
+      update: {
+        type: status
+      },
+      select: {
+        type: true,
+        user_id: true,
+        updated_at: true,
+      }
+    })
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {

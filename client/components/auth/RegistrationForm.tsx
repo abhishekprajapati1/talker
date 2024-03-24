@@ -23,7 +23,6 @@ const RegistrationForm = () => {
     });
 
     const onSubmit = (data: ISignupForm) => {
-        console.log("see this", data);
         signup(data);
     }
 

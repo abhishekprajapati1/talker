@@ -29,4 +29,7 @@ export interface IConversation {
     id: string;
     recent_message: IMessage;
     user: User;
+    _count: {
+        messages: number
+    }
 }

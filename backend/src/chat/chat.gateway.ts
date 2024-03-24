@@ -37,6 +37,8 @@ export class ChatGateway {
     async listenForMessages(@MessageBody() message: SendMessageDto, @ConnectedSocket() socket: HydratedSocket) {
         const created = await this.chatService.createMessage({ sender_id: socket.user.id, data: message });
         this.server.to(message.conversation_id).emit('message', created);
+        let newConversation = await this.chatService.findConversationToNotify(message.conversation_id, socket.user.id);
+        this.server.to(message.conversation_id).emit("update-conversation", newConversation);
     }
 
 
@@ -57,9 +59,18 @@ export class ChatGateway {
     }
 
     async handleConnection(socket: HydratedSocket, ...args: any[]): Promise<void> {
-        Logger.log("client connected");
         // here we will let user join the rooms first...
         const rooms = await this.chatService.getAllConversationIds(socket.user.id);
-        socket.join(rooms)
+        socket.join(rooms);
+
+        // update status in db
+        let status = await this.userService.updateStatus({ id: socket.user.id, status: "online" });
+        this.server.emit('user-presence', status)
+    }
+
+    async handleDisconnect(socket: HydratedSocket, ...ars: any[]) {
+        // update status in db
+        let status = await this.userService.updateStatus({ id: socket.user.id, status: "offline" });
+        this.server.emit('user-presence', status)
     }
 }

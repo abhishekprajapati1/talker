@@ -2,14 +2,29 @@
 import { Box, Stack, Typography } from '@mui/material'
 import React, { useEffect } from 'react'
 import ConversationTile from './ConversationTile';
-import Socket from '@/libs/Socket';
 import useFetch from '@/libs/hooks/useFetch';
 import endpoints from '@/libs/endpoints';
 import { IConversation } from '@/libs/types';
+import useSocket from '@/libs/hooks/useSocket';
+import { useAppDispatch, useAppSelector } from '@/store';
+import { populateConversations, pushConversation } from '@/store/slices/conversations.slice';
 
 const ConversationList = () => {
+    const dispatch = useAppDispatch();
     const { data } = useFetch({ endpoint: endpoints.CONVERSATIONS })
-    const conversations = data;
+    const conversations = useAppSelector(store => store.conversationsStore)
+
+    useSocket('update-conversation', (data) => {
+        dispatch(pushConversation(data))
+    })
+
+
+    useEffect(() => {
+        if (data) {
+            dispatch(populateConversations(data))
+        }
+    }, [data]);
+
     if (conversations?.length <= 0) {
         return (
             <Box display="flex" flexGrow={1} alignItems="center" justifyContent="center">

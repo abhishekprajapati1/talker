@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { Socket } from 'socket.io';
 import { TokenService } from '../token/token.service';
@@ -83,6 +83,13 @@ export class ChatService {
                 participants: {
                     where: { user_id: { not: user_id } },
                     select: { user: { select: { id: true, name: true, email: true } } }
+                },
+                _count: {
+                    select: {
+                        messages: {
+                            where: { status: { in: ["notdelivered", "delivered"] } }
+                        }
+                    }
                 }
             }
         });
@@ -101,6 +108,38 @@ export class ChatService {
         return formatted;
     }
 
+    async findConversationToNotify(conversation_id: string, user_id: string) {
+        const data = await this.prisma.conversation.findUnique({
+            where: { id: conversation_id },
+            select: {
+                id: true,
+                messages: {
+                    take: 1,
+                    select: { body: true, sender_id: true, status: true, timestamp: true, type: true },
+                    orderBy: { updated_at: "desc" }
+                },
+                participants: {
+                    where: { user_id },
+                    select: { user: { select: { id: true, name: true, email: true } } }
+                },
+                _count: {
+                    select: {
+                        messages: {
+                            where: { status: { in: ["notdelivered", "delivered"] } }
+                        }
+                    }
+                }
+            }
+        });
+
+        let formatted: any = { ...data };
+        formatted.recent_message = data.messages?.[0];
+        formatted.user = data.participants?.[0]?.user;
+        delete formatted.messages;
+        delete formatted.participants;
+        return formatted;
+    }
+
     async findConversationByConversationId(conversation_id: string, logged_in_user_id: string) {
         const data = await this.prisma.conversation.findUnique({
             where: { id: conversation_id },
@@ -108,7 +147,7 @@ export class ChatService {
                 id: true,
                 participants: {
                     where: { user_id: { not: logged_in_user_id } },
-                    select: { user: { select: { id: true, name: true, email: true } } }
+                    select: { user: { select: { id: true, name: true, email: true, status: { select: { type: true, updated_at: true, user_id: true } } } } }
                 }
             }
         });

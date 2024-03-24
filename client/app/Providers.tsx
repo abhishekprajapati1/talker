@@ -8,14 +8,7 @@ import { Provider } from 'react-redux';
 import store from '@/store';
 
 const Providers: FC<IWrapper> = ({ children }) => {
-    const [queryClient] = useState(() => new QueryClient({
-        defaultOptions: {
-            queries: {
-                staleTime: 19 * (60 * 1000),
-                gcTime: 20 * (60 * 1000),
-            },
-        }
-    }));
+    const [queryClient] = useState(() => new QueryClient());
 
     const refreshAuthToken = () => {
         const tokenMeta = window.localStorage.getItem(TOKEN_VALIDITY.auth_token);
